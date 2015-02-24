@@ -18,15 +18,24 @@ import javax.servlet.ServletRegistration.Dynamic;
 import java.io.IOException;
 
 public class WebAppInitializer implements WebApplicationInitializer {
-    
+
+    String basicConfig = "classpath:/remoteSetup.properties";
+
 	public void onStartup(ServletContext servletContext) throws ServletException {
 
         AnnotationConfigWebApplicationContext ctx = new AnnotationConfigWebApplicationContext();
-        ctx.getEnvironment().setActiveProfiles("datasource.remoteDB","db.dbdao");
+        ConfigurableEnvironment env = ctx.getEnvironment();
+        try{
+            env.getPropertySources().addFirst(new ResourcePropertySource(basicConfig));
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        System.setProperty(AbstractEnvironment.ACTIVE_PROFILES_PROPERTY_NAME,env.getProperty("activeProfile"));
+
         ctx.register(AppConfig.class);
-        ctx.setServletContext(servletContext);    
-        Dynamic dynamic = servletContext.addServlet("dispatcher", new DispatcherServlet(ctx));  
-        dynamic.addMapping("/");  
-        dynamic.setLoadOnStartup(1);  
+        ctx.setServletContext(servletContext);
+        Dynamic dynamic = servletContext.addServlet("dispatcher", new DispatcherServlet(ctx));
+        dynamic.addMapping("/");
+        dynamic.setLoadOnStartup(1);
    }  
 }
