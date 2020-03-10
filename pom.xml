@@ -11,7 +11,7 @@
 
     <properties>
         <spring.version>4.1.4.RELEASE</spring.version>
-        <jacksondatabine.version>2.5.0</jacksondatabine.version>
+        <jacksondatabine.version>2.9.10.3</jacksondatabine.version>
     </properties>
     <dependencies>
         <dependency>
